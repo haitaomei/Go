@@ -6,7 +6,7 @@ import (
 	"math/rand"
 )
 
-type Vertex struct {
+type vertex struct {
 	Lat, Long float64
 }
 
@@ -16,8 +16,8 @@ func main() {
 	fmt.Println(add(3, 4))
 	fmt.Println(swap("World", "Hello "))
 
-	var m = make(map[string]Vertex)
-	m["Bell Labs"] = Vertex{
+	var m = make(map[string]vertex)
+	m["Bell Labs"] = vertex{
 		40.68433, -74.39967,
 	}
 	fmt.Println(m["Bell Labs"])
