@@ -9,8 +9,16 @@ import (
 )
 
 func main() {
+	var url = "https://localhost:60443/"
+	req(url)
+
+	url = "https://localhost:60443/helloAPI/Leopold"
+	req(url)
+}
+
+func req(url string) {
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	response, err := http.Get("https://localhost:60443/")
+	response, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
 	}
