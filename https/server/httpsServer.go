@@ -25,7 +25,8 @@ func main() {
 
 	http.Handle("/", router)
 
-	http.ListenAndServeTLS(":60443", "server.crt", "server.key", nil)
+	http.ListenAndServeTLS(":60443", "server.crt", "server.key", nil) //https
+	// http.ListenAndServe(":60443", nil)                                //standard http
 }
 
 func rootHandler(httpResp http.ResponseWriter, httpReq *http.Request) {
