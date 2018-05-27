@@ -2,20 +2,12 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Https Server Running")
-}
-
 func main() {
-	/*------------ basic server ----------------*/
-	// http.HandleFunc("/", handler)
-
 	/*------------ Restful style server ----------------*/
 	router := mux.NewRouter()
 	rootRouter := router.PathPrefix("/").Subrouter()
@@ -25,8 +17,9 @@ func main() {
 
 	http.Handle("/", router)
 
-	http.ListenAndServeTLS(":60443", "server.crt", "server.key", nil) //https
-	// http.ListenAndServe(":60443", nil)                                //standard http
+	/* the certFile should be the concatenation of the server's certificate, any intermediates, and the CA's certificate. */
+	http.ListenAndServeTLS(":60443", "../tls/cert.pem", "../tls/key.pem", nil) //https
+	// http.ListenAndServe(":60443", nil)	//standard http
 }
 
 func rootHandler(httpResp http.ResponseWriter, httpReq *http.Request) {
