@@ -3,7 +3,7 @@
 
 2. server/httpsServer.go will use ``cert.pem`` and ``key.pem`` to start server
 
-3. request.go use ``cert.pem`` to connect, as self-signed certificate==ca certificate
+3. request.go use ``cert.pem`` as the caCert to connect, as self-signed certificate==ca certificate
 
 
 
