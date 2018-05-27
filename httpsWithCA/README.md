@@ -3,7 +3,7 @@
 
 2. server/httpsServer.go will use ``server-crt.pem`` and ``server-key.pem`` to start server
 
-3. request.go use ``ca-crt.pem`` as the caCert to connect
+3. request.go use ``ca-crt.pem`` as the caCert to connect. Note that, web browser can also import this certificate to trust our newly created certificate authority
 
 Simple Node.js request
 -----------
