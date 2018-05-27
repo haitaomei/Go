@@ -13,7 +13,7 @@ import (
 
 func main() {
 	os.Setenv("MONGO_CONNECTSTR", "mongodb://mongo-test:27017/")
-	os.Setenv("MONGO_SSLCAFILE_LOCATION", "/Users/Haitao.Mei@ibm.com/go/src/github.ibm.com/pa-next-infrastructure/ODDT-Kube/certs/mongo_oddk.pem")
+	os.Setenv("MONGO_SSLCAFILE_LOCATION", "~/mongo.pem")
 
 	db, err := setupMongoKK()
 	if err == nil {
