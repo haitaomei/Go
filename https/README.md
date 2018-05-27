@@ -3,11 +3,4 @@
 
 2. server/httpsServer.go will use ``cert.pem`` and ``key.pem`` to start server
 
-3. request.go use ``cert.pem`` as the caCert to connect, as self-signed certificate==ca certificate
-
-
-
-
-Addition Reading
-
-https://engineering.circle.com/https-authorized-certs-with-node-js-315e548354a2
+3. request.go use ``cert.pem`` as the caCert to connect
