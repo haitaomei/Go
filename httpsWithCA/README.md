@@ -21,7 +21,7 @@ Simple Node.js server
     var options = { 
         key: fs.readFileSync('localhost_cert/server-key.pem'), 
         cert: fs.readFileSync('localhost_cert/server-crt.pem'), 
-        ca: fs.readFileSync('localhost_cert/ca-crt.pem'), 
+        ca: fs.readFileSync('localhost_cert/ca-crt.pem'),  // because we used CA to sign, without this Node.js throws errors
     }; 
 
     https.createServer(options, server).listen(60443)  
