@@ -9,8 +9,8 @@ import (
 )
 
 type User struct {
-	Name string `json:"name"`
-	ID   int    `json:"id"`
+	Name string `json:"name,omitempty"`
+	ID   int    `json:"id,omitempty"`
 }
 
 /*
@@ -19,8 +19,8 @@ type User struct {
  */
 
 type UserForRead struct {
-	Name *string `json:"name"`
-	ID   *int    `json:"id"`
+	Name *string `json:"name,omitempty"`
+	ID   *int    `json:"id,omitempty"`
 }
 
 func rootHandler(httpResp http.ResponseWriter, httpReq *http.Request) {
