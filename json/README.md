@@ -22,3 +22,12 @@ Gets ``ID is set``
 ``curl --header "Content-Type: application/json"   --request GET   --data '{"name":"james"}' http://127.0.0.1:60443/``
 
 Gets ``ID is omited in the request``
+
+
+
+Reject Unknown Json fields
+---------
+
+        decoder := json.NewDecoder(httpReq.Body)
+        decoder.DisallowUnknownFields()
+        err = decoder.Decode(&cfg)
