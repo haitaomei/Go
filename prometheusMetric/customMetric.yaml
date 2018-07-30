@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: custom-metric-deploy
+  labels:
+    app: custom-metric
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app-name: custom-metric
+  template:
+    metadata:
+      annotations:
+        prometheus.io/scrape: 'true'  # Tell prometheus to collect metric from this deployment
+      labels:
+        app-name: custom-metric
+    spec:
+      containers:
+      - name: custom-metric-container
+        image: khitaomei/custommetric:latest
+        ports:
+        - name: web
+          containerPort: 8080
