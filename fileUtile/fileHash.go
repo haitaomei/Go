@@ -1,14 +1,14 @@
-package main
+package fileutile
 
 import (
 	"crypto/sha256"
 	"fmt"
 	"io"
 	"os"
-	"time"
 )
 
-func hash(path string) (string, error) {
+// FileHash calculate SHA256 code of a file
+func FileHash(path string) (string, error) {
 	h := sha256.New()
 	f, err := os.Open(path)
 	if err != nil {
@@ -22,12 +22,7 @@ func hash(path string) (string, error) {
 	return s, nil
 }
 
-func main() {
-	start := time.Now()
-
-	s, _ := hash("hash.go")
-
-	t := time.Now()
-	elapsed := t.Sub(start)
-	fmt.Println("Hash code", s, "\t using ", elapsed)
+// DataHash calculate SHA256 code of a data
+func DataHash(data []byte) (string, error) {
+	return fmt.Sprintf("%x", sha256.Sum256(data)), nil
 }
