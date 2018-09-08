@@ -1,4 +1,4 @@
-package fileutile
+package fileutils
 
 import (
 	"io/ioutil"
