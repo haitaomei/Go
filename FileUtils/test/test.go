@@ -7,8 +7,8 @@ import (
 	"github.com/haitaomei/GoUtil/fileutils"
 )
 
-var path = "1.zip"
-var newpath = "2.zip"
+var path = "/Users/HaiTao/test/1.zip"
+var newpath = "/Users/HaiTao/test/2.zip"
 
 func main() {
 	hashExample(path)
@@ -18,13 +18,13 @@ func main() {
 
 func splitExample() {
 
-	chuncks, num, _ := fileutils.Split(path)
+	chuncks, _ := fileutils.Split(path)
 	for i := 0; i < len(chuncks); i++ {
 		sc, _ := fileutils.DataHash(*chuncks[i])
 		fmt.Println("Hash code partition ", i, "= ", sc)
 	}
-	fileutils.StorePartitions(chuncks, num, path)
-	fileutils.Merge(path, num, newpath, true)
+	fileutils.StorePartitions(chuncks, path)
+	fileutils.Merge(path, len(chuncks), newpath, true)
 }
 
 func hashExample(file string) {
