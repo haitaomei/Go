@@ -23,6 +23,6 @@ func FileHash(path string) (string, error) {
 }
 
 // DataHash calculate SHA256 code of a data
-func DataHash(data []byte) (string, error) {
-	return fmt.Sprintf("%x", sha256.Sum256(data)), nil
+func DataHash(data *[]byte) (string, error) {
+	return fmt.Sprintf("%x", sha256.Sum256(*data)), nil
 }

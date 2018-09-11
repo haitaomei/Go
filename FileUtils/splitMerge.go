@@ -50,8 +50,33 @@ func Split(path string) ([]*[]byte, error) {
 	return res, nil
 }
 
-// SplitHash calculates the hash code of each partition of a file
-func SplitHash(path string) ([]string, error) {
+// GetPartition returns the pointer that points to the data of a partition
+func GetPartition(path string, partition int) (*[]byte, error) {
+	fileInfo, err := os.Stat(path)
+	if err != nil {
+		return nil, err
+	}
+
+	fi, err := os.OpenFile(path, os.O_RDONLY, os.ModePerm)
+	if err != nil {
+		return nil, err
+	}
+
+	size := chunkSize
+	count := int(math.Ceil(float64(fileInfo.Size()) / float64(chunkSize)))
+	if partition == count-1 {
+		size = fileInfo.Size() - (int64(count)-1)*chunkSize
+	}
+	b := make([]byte, size)
+
+	fi.Seek(int64(partition)*chunkSize, 0)
+	fi.Read(b)
+	fi.Close()
+	return &b, nil
+}
+
+// PartitionHash calculates the hash code of each partition of a file
+func PartitionHash(path string) ([]string, error) {
 	fileInfo, err := os.Stat(path)
 	if err != nil {
 		return nil, err
@@ -72,7 +97,7 @@ func SplitHash(path string) ([]string, error) {
 			b = make([]byte, fileInfo.Size()-(i-1)*chunkSize)
 		}
 		fi.Read(b)
-		hash, err := DataHash(b)
+		hash, err := DataHash(&b)
 		if err != nil {
 			return nil, err
 		}
