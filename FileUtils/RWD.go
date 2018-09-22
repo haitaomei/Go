@@ -1,7 +1,6 @@
 package fileutils
 
 import (
-	"fmt"
 	"io"
 	"os"
 )
@@ -80,8 +79,7 @@ func DeleteFile(path string) {
 
 func isError(err error) bool {
 	if err != nil {
-		fmt.Println(err.Error())
+		//fmt.Println(err.Error())
 	}
-
 	return (err != nil)
 }
