@@ -47,6 +47,23 @@ func DeleteFile(path string) {
 	}
 }
 
+//DeleteDir delete a dir
+func DeleteDir(path string) {
+	fi, err := os.Stat(path)
+	if checkErr(err) {
+		return
+	}
+
+	switch mode := fi.Mode(); {
+	case mode.IsDir():
+		err = os.RemoveAll(path)
+		if checkErr(err) {
+			return
+		}
+	case mode.IsRegular():
+	}
+}
+
 func checkErr(err error) bool {
 	if err != nil {
 		fmt.Println(err.Error())
