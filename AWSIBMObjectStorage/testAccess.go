@@ -15,9 +15,9 @@ var SecretAccessKey = "d118d6b590a4ac15f0e83c545d307a48c952b904615f5476"
 
 func main() {
 	url := "https://s3.eu-geo.objectstorage.softlayer.net/"
-	bucketName := "haitao-test"
+	bucketName := "haitao-oddk"
 	res, _ := listBucketContents(url, bucketName)
-	objs := getObjectsWithinDir("test-dir", res)
+	objs := getObjectsWithinDir("tm15ccac9a6-306c-4e7c-bfd7-6a6c69e68556", res)
 
 	for _, obj := range *objs {
 		suc, err := deleteObject(url + bucketName + "/" + encode(obj))
@@ -78,7 +78,7 @@ func getObjectsWithinDir(dir string, res string) *[]string {
 				objs = append(objs, obj)
 			}
 		}
-		i = j + 6
+		i++
 	}
 	return &objs
 }
