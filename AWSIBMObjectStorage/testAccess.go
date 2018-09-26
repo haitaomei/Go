@@ -10,8 +10,8 @@ import (
 	"github.com/haitaomei/GoUtil/AWSIBMObjectStorage/awsauth"
 )
 
-var AccessKeyID = "a05d7fd864fe44d1a643c82e113f491d"
-var SecretAccessKey = "d118d6b590a4ac15f0e83c545d307a48c952b904615f5476"
+var accessKeyID = "a05d7fd864fe44d1a643c82e113f491d"
+var secretAccessKey = "d118d6b590a4ac15f0e83c545d307a48c952b904615f5476"
 
 func main() {
 	url := "https://s3.eu-geo.objectstorage.softlayer.net/"
@@ -41,8 +41,8 @@ func listBucketContents(url string, bucketName string) (string, error) {
 		return "", err
 	}
 	awsauth.Sign(req, awsauth.Credentials{
-		AccessKeyID:     AccessKeyID,
-		SecretAccessKey: SecretAccessKey,
+		AccessKeyID:     accessKeyID,
+		SecretAccessKey: secretAccessKey,
 	})
 
 	resp, err := client.Do(req)
@@ -90,8 +90,8 @@ func deleteObject(uri string) (bool, error) {
 		return false, err
 	}
 	awsauth.Sign(req, awsauth.Credentials{
-		AccessKeyID:     AccessKeyID,
-		SecretAccessKey: SecretAccessKey,
+		AccessKeyID:     accessKeyID,
+		SecretAccessKey: secretAccessKey,
 	})
 	resp, err := client.Do(req)
 	if err != nil {
@@ -101,14 +101,12 @@ func deleteObject(uri string) (bool, error) {
 	if resp.StatusCode == 204 {
 		// fmt.Println("Delete", uri, "sucessed")
 		return true, nil
-	} else {
-		// bodyBytes, err := ioutil.ReadAll(resp.Body)
-		// if err != nil {
-		// 	fmt.Println(err)
-		// }
-		// bodyString := string(bodyBytes)
-		// fmt.Println(bodyString)
-		return false, err
 	}
-	return true, nil
+	// bodyBytes, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+	// bodyString := string(bodyBytes)
+	// fmt.Println(bodyString)
+	return false, err
 }
