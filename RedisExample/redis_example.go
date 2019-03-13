@@ -1,19 +1,14 @@
 package main
 
 import (
-	"bytes"
-	"encoding/json"
+	"encoding/binary"
 	"fmt"
-	"io"
-	"log"
-	"strings"
+	"reflect"
+	"strconv"
+	"time"
 
 	"github.com/go-redis/redis"
 )
-
-type OnlineServers struct {
-	Servers []string // `json:"option_A"`
-}
 
 func main() { //docker run -d -p 6379:6379 redis
 	client := redis.NewClient(&redis.Options{
@@ -24,45 +19,51 @@ func main() { //docker run -d -p 6379:6379 redis
 
 	// pong, err := client.Ping().Result()
 
-	err := client.Set("Server1", "192.168.0.9", 0).Err()
+	err := client.Set("Key1", "value1", 0).Err()
 	if err != nil {
 		panic(err)
 	}
 
-	val, err := client.Get("Server1").Result()
+	val, err := client.Get("Key1").Result()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Server1", val)
+	fmt.Println("Key1", val)
 
+	str := ""
+	for i := 0; i < 2000; i++ {
+		str += strconv.Itoa(i)
+	}
+	fmt.Println("value size:", binary.Size([]byte(str))/1024, "KB")
+	start := time.Now()
+	client.Set("key2", str, 0).Err()
+	end := time.Now()
+	fmt.Println("Write response time:", end.Sub(start))
+	start = time.Now()
 	val2, err := client.Get("key2").Result()
+	end = time.Now()
+	fmt.Println("Read response time:", end.Sub(start))
 	if err == redis.Nil {
 		fmt.Println("key2 does not exist")
 	} else if err != nil {
 		panic(err)
 	} else {
-		fmt.Println("key2", val2)
+		sizeInBytes := binary.Size([]byte(val2)) / 1024
+		fmt.Println("key2's value's size:", sizeInBytes, "KB")
 	}
 
-	var testsvrs []string
-	testsvrs = append(testsvrs, "localhost")
-	osvrs := &OnlineServers{
-		Servers: testsvrs,
+	client.Do("SADD", "Key_for_set", "member1").Result()
+	client.Do("SADD", "Key_for_set", "member2").Result()
+	client.Do("SADD", "Key_for_set", "member3").Result()
+	client.Do("SADD", "Key_for_set", "member1").Result()
+	members := client.Do("SMEMBERS", "Key_for_set").Val()
+	s := reflect.ValueOf(members)
+	if s.Kind() != reflect.Slice {
+		panic("InterfaceSlice() given a non-slice type")
 	}
-	b := new(bytes.Buffer)
-	json.NewEncoder(b).Encode(osvrs)
-	client.Set("ServerList", b.String(), 0)
-	val3, err := client.Get("ServerList").Result()
-
-	dec := json.NewDecoder(strings.NewReader(val3))
-	for {
-		var m OnlineServers
-		if err := dec.Decode(&m); err == io.EOF {
-			break
-		} else if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(m)
+	for i := 0; i < s.Len(); i++ {
+		vs := s.Index(i).Interface().(string)
+		fmt.Println(vs)
 	}
-
+	client.Do("SPOP", "Key_for_set").Result()
 }
