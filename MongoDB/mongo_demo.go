@@ -18,11 +18,15 @@ type UserType struct {
 	Inactive bool
 }
 
-//docker run --rm --name mongodb-local \
-//-p 27017:27017 -p 27018:27018 -p 27019:27019 \
-//-e MONGO_INITDB_ROOT_USERNAME=admin \
-//-e MONGO_INITDB_ROOT_PASSWORD=adminpwd \
-//mongo
+/*
+
+docker run --rm --name mongodb-local \
+-p 27017:27017 -p 27018:27018 -p 27019:27019 \
+-e MONGO_INITDB_ROOT_USERNAME=admin \
+-e MONGO_INITDB_ROOT_PASSWORD=adminpwd \
+mongo
+
+*/
 
 func main() {
 	os.Setenv("MONGO_SERVER", "localhost")
@@ -52,6 +56,12 @@ func main() {
 		fmt.Println("InsertMany fail")
 	}
 
+	/* ------------------------------------------------------------
+		bson.D{{"email", "bill2@ht.com"}},
+		Note, here must use ALL lower case !!!
+		Unless specify `bson:"Email"` in the structure
+	------------------------------------------------------------*/
+
 	// Update one
 	_, err = mongo.collection.UpdateOne(context.TODO(),
 		bson.D{{"email", "bill2@ht.com"}},
@@ -62,8 +72,7 @@ func main() {
 
 	// Find one
 	var aUser UserType
-	err = mongo.collection.FindOne(context.TODO(), bson.D{{"name", /* Note, here must use lower case !!! */
-		"testUser"}}).Decode(&aUser)
+	err = mongo.collection.FindOne(context.TODO(), bson.D{{"name", "testUser"}}).Decode(&aUser)
 	if err != nil {
 		log.Fatal(err)
 	}
