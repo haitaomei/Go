@@ -29,10 +29,10 @@ mongo
 */
 
 func main() {
-	os.Setenv("MONGO_SERVER", "localhost")
-	os.Setenv("MONGO_PORT", "27017")
-	os.Setenv("MONGO_USER_NAME", "admin")
-	os.Setenv("MONGO_PASSWORD", "adminpwd")
+	_ = os.Setenv("MONGO_SERVER", "localhost")
+	_ = os.Setenv("MONGO_PORT", "27017")
+	_ = os.Setenv("MONGO_USER_NAME", "admin")
+	_ = os.Setenv("MONGO_PASSWORD", "adminpwd")
 
 	mongo := &MongoUtil{
 		DBName:         "test",
@@ -119,16 +119,16 @@ func (u *MongoUtil) InitMongoConnection() {
 	var mongoPassword string
 	ok := false
 	if mongoServer, ok = os.LookupEnv("MONGO_SERVER"); !ok {
-		fmt.Errorf("MongoDB server is not specified")
+		log.Fatal("MongoDB server is not specified")
 	}
 	if mongoPort, ok = os.LookupEnv("MONGO_PORT"); !ok {
-		fmt.Errorf("MongoDB port is not specified")
+		log.Fatal("MongoDB port is not specified")
 	}
 	if mongoUser, ok = os.LookupEnv("MONGO_USER_NAME"); !ok {
-		fmt.Errorf("MongoDB username is not specified")
+		log.Fatal("MongoDB username is not specified")
 	}
 	if mongoPassword, ok = os.LookupEnv("MONGO_PASSWORD"); !ok {
-		fmt.Errorf("MongoDB passowrd is not specified")
+		log.Fatal("MongoDB passowrd is not specified")
 	}
 
 	mongoConnectStr = "mongodb://" + mongoUser + ":" + mongoPassword + "@" + mongoServer + ":" + mongoPort + "/"
