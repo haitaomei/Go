@@ -119,16 +119,20 @@ func (u *MongoUtil) InitMongoConnection() {
 	var mongoPassword string
 	ok := false
 	if mongoServer, ok = os.LookupEnv("MONGO_SERVER"); !ok {
-		log.Fatal("MongoDB server is not specified")
+		mongoServer = "localhost"
+		log.Println("MongoDB server is not specified, using localhost as default")
 	}
 	if mongoPort, ok = os.LookupEnv("MONGO_PORT"); !ok {
-		log.Fatal("MongoDB port is not specified")
+		mongoPort = "27017"
+		log.Println("MongoDB port is not specified, using 27017 as default")
 	}
 	if mongoUser, ok = os.LookupEnv("MONGO_USER_NAME"); !ok {
-		log.Fatal("MongoDB username is not specified")
+		mongoUser = "admin"
+		log.Println("MongoDB username is not specified, using admin as default")
 	}
 	if mongoPassword, ok = os.LookupEnv("MONGO_PASSWORD"); !ok {
-		log.Fatal("MongoDB passowrd is not specified")
+		mongoPassword = "adminpwd"
+		log.Println("MongoDB passowrd is not specified, using adminpwd as default")
 	}
 
 	mongoConnectStr = "mongodb://" + mongoUser + ":" + mongoPassword + "@" + mongoServer + ":" + mongoPort + "/"
@@ -138,8 +142,15 @@ func (u *MongoUtil) InitMongoConnection() {
 		mongoConnectStr,
 	))
 	if err != nil {
-		log.Fatal("error connecting to mongoDB", err)
+		log.Fatal("error connecting to mongoDB using connecting string", mongoConnectStr, err)
 	}
+
+	// Check the connection
+	err = client.Ping(context.TODO(), nil)
+	if err != nil {
+		log.Fatal("error connecting to mongoDB using connecting string", mongoConnectStr, err)
+	}
+
 	u.client = client
 	log.Println("Connected to MongoDB!")
 
@@ -147,6 +158,9 @@ func (u *MongoUtil) InitMongoConnection() {
 }
 
 func (u *MongoUtil) Disconnect() {
+	if u.client == nil {
+		return
+	}
 	err := u.client.Disconnect(context.TODO())
 	if err != nil {
 		log.Fatal(err)
@@ -157,9 +171,10 @@ func (u *MongoUtil) Disconnect() {
 func (u *MongoUtil) InsertOne(document interface{}) error {
 	ret, err := u.collection.InsertOne(context.TODO(), document)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
-	fmt.Println("Inserted a single document: ", ret.InsertedID)
+	log.Println("Inserted a single document: ", ret.InsertedID)
 	return nil
 }
 
@@ -168,7 +183,7 @@ func (u *MongoUtil) InsertMany(document []interface{}) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println("Inserted multiple documents: ", ret.InsertedIDs)
+	log.Println("Inserted multiple documents: ", ret.InsertedIDs)
 	return nil
 }
 
@@ -177,5 +192,5 @@ func (u *MongoUtil) DeleteAll() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Deleted %v documents in the %s collection\n", deleteResult.DeletedCount, u.CollectionName)
+	log.Printf("Deleted %v documents in the %s collection\n", deleteResult.DeletedCount, u.CollectionName)
 }
